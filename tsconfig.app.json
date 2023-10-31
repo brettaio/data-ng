@@ -3,7 +3,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["node", "lodash", "jasmine", "jquery"]
+    "types": ["node", "lodash", "jasmine", "jquery", "express"]
   },
   "files": ["src/main.ts"],
   "include": ["src/**/*.d.ts"]
