@@ -1,50 +1,84 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as THREE from 'three';
 
 @Component({
   selector: 'app-preloader',
-  templateUrl: './preloader.component.html',
+  template: '<div #webglCanvas></div>',
   styleUrls: ['./preloader.component.scss'],
 })
-export class PreloaderComponent {
+export class PreloaderComponent implements OnInit {
+  @ViewChild('webglCanvas', { static: true }) webglCanvas!: ElementRef;
+
+  private scene!: THREE.Scene;
+  private camera!: THREE.PerspectiveCamera;
+  private renderer!: THREE.WebGLRenderer;
+  private cube!: THREE.Mesh;
+  private frameId!: number;
+
   constructor() {}
 
   ngOnInit(): void {
-    // Create a scene, camera, and renderer
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer();
+    this.initScene();
+    this.createCamera();
+    this.createRenderer();
+    this.createCube();
+    this.animate();
+  }
 
-    // Set the renderer size
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+  private initScene(): void {
+    this.scene = new THREE.Scene();
+  }
 
-    // Create a cube and add it to the scene
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+  private createCamera(): void {
+    const aspect = window.innerWidth / window.innerHeight;
+    this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+    this.camera.position.z = 5;
+  }
 
-    // Position the camera
-    camera.position.z = 5;
+  private createRenderer(): void {
+    this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.webglCanvas.nativeElement.appendChild(this.renderer.domElement);
+  }
 
-    // Create a simple animation loop
-    const animate = () => {
-      requestAnimationFrame(animate);
+  private createCube(): void {
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-      // Rotate the cube
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
+    // Load your SVG images here for cube sides
+    const materials = [
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('launch-2023.svg'),
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('launch-2023.svg'),
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('launch-2023.svg'),
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('launch-2023.svg'),
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('launch-2023.svg'),
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('launch-2023.svg'),
+      }),
+    ];
 
-      // Render the scene
-      renderer.render(scene, camera);
-    };
+    this.cube = new THREE.Mesh(geometry, materials);
+    this.scene.add(this.cube);
+  }
 
-    animate();
+  private animate(): void {
+    this.frameId = requestAnimationFrame(() => {
+      this.animate();
+    });
+
+    // Rotate the cube
+    this.cube.rotation.x += 0.01;
+    this.cube.rotation.y += 0.01;
+
+    this.renderer.render(this.scene, this.camera);
   }
 }
