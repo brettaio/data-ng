@@ -23,8 +23,7 @@
 
     //added settings
 
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true
+    "noImplicitAny": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
