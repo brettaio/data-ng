@@ -1,0 +1,24 @@
+#topnav.nav-sticky {
+  background: #dcf;
+  box-shadow: 0 0 3px rgba(60, 72, 88, 0.15);
+}
+
+#topnav {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  background-color: transparent;
+  border: 0;
+  transition: all 0.5s ease;
+  min-height: 10vh;
+}
+
+@media (min-width: 992px) {
+  #topnav .navigation-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
